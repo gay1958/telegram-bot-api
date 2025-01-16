@@ -1,0 +1,19 @@
+```sql
+users:
+- id
+- username
+- token
+- is_premium
+
+groups:
+- id
+- group_name
+- group_id
+- user_id
+
+messages:
+- id
+- message_text
+- group_id
+- scheduled_time
+```
