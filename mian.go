@@ -134,3 +134,66 @@ func main() {
 ‏		log.Printf("%+v\n", update)
 	}
 }
+package main
+
+import (
+    "github.com/gin-gonic/gin"
+    "github.com/go-telegram-bot-api/telegram-bot-api"
+)
+
+func main() {
+    r := gin.Default()
+    
+    // Initialize Telegram Bot
+    bot, err := tgbotapi.NewBotAPI("AAHqonl_U6JgVeJWXFZUD9F9ihJAXG-r0NI
+    if err != nil {
+        panic(err)
+    }
+
+    // Route to send message
+    r.POST("/send-message", func(c *gin.Context) {
+        var json struct {
+            GroupID    int64  `json:"group_id"`
+            MessageText string `json:"message_text"`
+        }
+        if err := c.ShouldBindJSON(&json); err == nil {
+            msg := tgbotapi.NewMessage(json.GroupID, json.MessageText)
+            bot.Send(msg)
+            c.JSON(200, gin.H{"status": "sent"})
+        } else {
+            c.JSON(400, gin.H{"status": "error"})
+        }
+    })
+
+    r.Run(":8080") // Start server
+}
+4. Frontend - Angular
+
+‎- התקנת Angular:
+
+ng new telegram-bot-client
+cd telegram-bot-client
+ng add @angular/material
+‎- קוד דוגמה:
+
+import { Component } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+
+@Component({
+  selector: 'app-root',
+  template: `
+    <h1>Telegram Bot</h1>
+    <button (click)="sendMessage()">Send Message</button>
+  `
+})
+export class AppComponent {
+  constructor(private http: HttpClient) {}
+
+  sendMessage() {
+    const message = { group_id: 'GROUP_ID', message_text: 'Hello from Angular!' };
+    this.http.post('/send-message', message).subscribe(response => {
+      console.log(response);
+    });
+  }
+}
+
